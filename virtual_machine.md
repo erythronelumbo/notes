@@ -161,6 +161,16 @@ To-do:
 
 ### Stack effects
 
+Notation:
+```
++------------------------- Bottom of the stack
+|
+|                      +-- Top of the stack
+|                      |
+v                      v
+|x{n-1} x{n-2} ... x1 x0]
+```
+
 Arithmetic and bitwise integer operations:
 - `and-{d/w/h/b}`:
   - `|... x1 x0]` --> `|... (x1 & x0)]`
@@ -203,3 +213,154 @@ Arithmetic and bitwise integer operations:
 - `smod-{d/w/h/b}`:
   - `|... x1 x0]` --> `|... (x1 % x0)]`
   - `x1` and `x0` are taken as signed values.
+
+Integer predicates:
+- The result of each one of these operations is `1` when true or `0` when false.
+- `isz-{d/w/h/b}`:
+  - `|... x]` --> `|... (x == 0)]`
+- `isnz-{d/w/h/b}`:
+  - `|... x]` --> `|... (x != 0)]`
+- `eq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 == x0)]`
+- `neq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 != x0)]`
+- `ult-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 < x0)]`
+  - The operands are read as unsigned values.
+- `slt-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 < x0)]`
+  - The operands are read as signed values.
+- `ugt-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 > x0)]`
+  - The operands are read as unsigned values.
+- `sgt-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 > x0)]`
+  - The operands are read as signed values.
+- `uleq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 <= x0)]`
+  - The operands are read as unsigned values.
+- `sleq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 <= x0)]`
+  - The operands are read as signed values.
+- `ugeq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 >= x0)]`
+  - The operands are read as unsigned values.
+- `sgeq-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 >= x0)]`
+  - The operands are read as signed values.
+
+Memory:
+- `ld-{d/w/h/b}`:
+  - `|... addr]` --> `|... memory[addr]]`
+- `ldi-{d/w/h/b}[addr]`:
+  - `|...]` --> `|... memory[addr]]`
+- `st-{d/w/h/b}`:
+  - `|... x addr]` --> `|...]`
+  - `x` will be stored in `memory[addr]`.
+- `sti-{d/w/h/b}[addr]`:
+  - `|... x]` --> `|...]`
+  - `x` will be stored in `memory[addr]`.
+
+"Conversion" between integers:
+- `sxt-bd`:
+  - `|... x]` --> `|... sign_extend_8to64bits(x)]`
+  - Extends the sign of an 8-bit integer to 64 bits.
+- `sxt-bw`:
+  - `|... x]` --> `|... sign_extend_8to32bits(x)]`
+  - Extends the sign of an 8-bit integer to 32 bits.
+- `sxt-bh`:
+  - `|... x]` --> `|... sign_extend_8to16bits(x)]`
+  - Extends the sign of an 8-bit integer to 16 bits.
+- `sxt-hd`:
+  - `|... x]` --> `|... sign_extend_16to64bits(x)]`
+  - Extends the sign of a 16-bit integer to 64 bits.
+- `sxt-hw`:
+  - `|... x]` --> `|... sign_extend_16to32bits(x)]`
+  - Extends the sign of a 16-bit integer to 32 bits.
+- `sxt-wd`:
+  - `|... x]` --> `|... sign_extend_32to64bits(x)]`
+  - Extends the sign of a 32-bit integer to 64 bits.
+- `trc-w`:
+  - `|... x]` --> `|... (x & 0xffffffff)]`
+  - Truncation to 32 bits.
+- `trc-h`:
+  - `|... x]` --> `|... (x & 0xffff)]`
+  - Truncation to 16 bits.
+- `trc-b`:
+  - `|... x]` --> `|... (x & 0xff)]`
+  - Truncation to 8 bits.
+
+Stack manipulation:
+- `lit[x]`:
+  - `|...]` --> `|... x]`
+- `pop`:
+  - `|... x0]` --> `|...]`
+- `dpop`:
+  - `|... x1 x0]` --> `|...]`
+- `pickif`:
+  - `|... x1 x0 c]` --> `|... x0]` if `c != 0`
+  - `|... x1 x0 c]` --> `|... x1]` if `c == 0`
+- `dup-1`:
+  - `|... x0]` --> `|... x0 x0]`
+- `dup-2`:
+  - `|... x1 x0]` --> `|... x1 x0 x1]`
+- `dup-3`:
+  - `|... x2 x1 x0]` --> `|... x2 x1 x0 x2]`
+- `dup-4`:
+  - `|... x3 x2 x1 x0]` --> `|... x3 x2 x1 x0 x3]`
+- `dup-5`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x4 x3 x2 x1 x0 x4]`
+- `dup-6`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x5 x4 x3 x2 x1 x0 x5]`
+- `dup-7`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x6 x5 x4 x3 x2 x1 x0 x6]`
+- `dup-8`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x7 x6 x5 x4 x3 x2 x1 x0 x7]`
+- `dup-t`:
+  - `|... x{n} ... x0 n]` --> `|... x{n} ... x0 x{n}]`
+- `swap-1`:
+  - `|... x1 x0]` --> `|... x0 x1]`
+- `swap-2`:
+  - `|... x2 x1 x0]` --> `|... x0 x1 x2]`
+- `swap-3`:
+  - `|... x3 x2 x1 x0]` --> `|... x0 x2 x1 x3]`
+- `swap-4`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x0 x3 x2 x1 x4]`
+- `swap-5`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x0 x4 x3 x2 x1 x5]`
+- `swap-6`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x5 x4 x3 x2 x1 x6]`
+- `swap-7`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x6 x5 x4 x3 x2 x1 x7]`
+- `swap-8`:
+  - `|... x8 x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x7 x6 x5 x4 x3 x2 x1 x8]`
+- `swap-t`:
+  - `|... x{n} ... x0 n]` --> `|... x0 ... x{n+1}]`
+- `grab-3`:
+  - `|... x2 x1 x0]` --> `|... x1 x0 x2]`
+- `grab-4`:
+  - `|... x3 x2 x1 x0]` --> `|... x2 x1 x0 x3]`
+- `grab-5`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x3 x2 x1 x0 x4]`
+- `grab-6`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x4 x3 x2 x1 x0 x5]`
+- `grab-7`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x5 x4 x3 x2 x1 x0 x6]`
+- `grab-8`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x6 x5 x4 x3 x2 x1 x0 x7]`
+- `grab-t`:
+  - `|... x{n} x{n-1} ... x1 x0 n]` --> `|... x{n-1} ... x1 x0 x{n}]`
+- `bury-3`:
+  - `|... x2 x1 x0]` --> `|... x0 x2 x1]`
+- `bury-4`:
+  - `|... x3 x2 x1 x0]` --> `|... x0 x3 x2 x1]`
+- `bury-5`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x0 x4 x3 x2 x1]`
+- `bury-6`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x0 x5 x4 x3 x2 x1]`
+- `bury-7`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x6 x5 x4 x3 x2 x1]`
+- `bury-8`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x7 x6 x5 x4 x3 x2 x1]`
+- `bury-t`:
+  - `|... x{n} x{n-1} ... x1 x0 n]` --> `|... x0 x{n} x{n-1} ... x1]`
