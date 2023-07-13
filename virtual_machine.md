@@ -32,119 +32,18 @@
 
 ## Opcodes
 
-Control:
-```
-+---+------+------+------+------+------+------+------+------+
-|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
-+---+------+------+------+------+------+------+------+------+
-|  0|halt  |jump  |jump-i|jz    |jz-i  |jnz   |jnz-i |call  |
-+---+------+------+------+------+------+------+------+------+
-|  8|call-i|ret   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-```
-
-Integer arithmetic and comparisons, halt:
-```
-+---+------+------+------+------+------+------+------+------+
-|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
-+---+------+------+------+------+------+------+------+------+
-| 16|and-d |or-d  |xor-d |not-d |sll-d |slr-d |sar-d |inc-d |
-+---+------+------+------+------+------+------+------+------+
-| 24|dec-d |add-d |sub-d |neg-d |mul-d |udiv-d|sdiv-d|umod-d|
-+---+------+------+------+------+------+------+------+------+
-| 32|smod-d|eq-d  |neq-d |isz-d |isnz-d|ult-d |slt-d |ugt-d |
-+---+------+------+------+------+------+------+------+------+
-| 40|sgt-d |uleq-d|sleq-d|ugeq-d|sgeq-d|...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-| 48|and-w |or-w  |xor-w |not-w |sll-w |slr-w |sar-w |inc-w |
-+---+------+------+------+------+------+------+------+------+
-| 56|dec-w |add-w |sub-w |neg-w |mul-w |udiv-w|sdiv-w|umod-w|
-+---+------+------+------+------+------+------+------+------+
-| 64|smod-w|eq-w  |neq-w |isz-w |isnz-w|ult-w |slt-w |ugt-w |
-+---+------+------+------+------+------+------+------+------+
-| 72|sgt-w |uleq-w|sleq-w|ugeq-w|sgeq-w|...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-| 80|and-h |or-h  |xor-h |not-h |sll-h |slr-h |sar-h |inc-h |
-+---+------+------+------+------+------+------+------+------+
-| 88|dec-h |add-h |sub-h |neg-h |mul-h |udiv-h|sdiv-h|umod-h|
-+---+------+------+------+------+------+------+------+------+
-| 96|smod-h|eq-h  |neq-h |isz-h |isnz-h|ult-h |slt-h |ugt-h |
-+---+------+------+------+------+------+------+------+------+
-|104|sgt-h |uleq-h|sleq-h|ugeq-h|sgeq-h|...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-|112|and-b |or-b  |xor-b |not-b |sll-b |slr-b |sar-b |inc-b |
-+---+------+------+------+------+------+------+------+------+
-|120|dec-b |add-b |sub-b |neg-b |mul-b |udiv-b|sdiv-b|umod-b|
-+---+------+------+------+------+------+------+------+------+
-|128|smod-b|eq-b  |neq-b |isz-b |isnz-b|ult-b |slt-b |ugt-b |
-+---+------+------+------+------+------+------+------+------+
-|136|sgt-b |uleq-b|sleq-b|ugeq-b|sgeq-b|...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-```
-
-Memory:
-```
-+---+------+------+------+------+------+------+------+------+
-|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
-+---+------+------+------+------+------+------+------+------+
-|144|ld-d  |ld-w  |ld-h  |ld-b  |ldi-d |ldi-w |ldi-h |ldi-b |
-+---+------+------+------+------+------+------+------+------+
-|152|st-d  |st-w  |st-h  |st-b  |sti-d |sti-w |sti-h |sti-b |
-+---+------+------+------+------+------+------+------+------+
-```
-
-- `ld-*` and `st-*` take the adresses from the top of the stack.
-- `ldi-*` and `sti-*` use an immediate value for the address.
-  - 32 or 64 bits? A packed integer encoding?
-    - `[<opcode>][addr3][addr2][addr1][addr0]`
-  - Relative or absolute?
-
-Sign extension (`sxt`) and truncation (`trc`) (between 64-, 32-, 16- and 8- bit
-integers):
-```
-+---+------+------+------+------+------+------+------+------+
-|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
-+---+------+------+------+------+------+------+------+------+
-|160|sxt-bd|sxt-bw|sxt-bh|sxt-hd|sxt-hw|sxt-wd|trc-w |trc-h |
-+---+------+------+------+------+------+------+------+------+
-|168|trc-b |...   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-```
-
-Stack manipulation:
-```
-+---+------+------+------+------+------+------+------+------+
-|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
-+---+------+------+------+------+------+------+------+------+
-|176|dup-1 |dup-2 |dup-3 |dup-4 |dup-5 |dup-6 |dup-7 |dup-8 |
-+---+------+------+------+------+------+------+------+------+
-|184|lit   |...   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-|192|swap-1|swap-2|swap-3|swap-4|swap-5|swap-6|swap-7|swap-8|
-+---+------+------+------+------+------+------+------+------+
-|200|pop   |...   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-|208|grab-3|grab-4|grab-5|grab-6|grab-7|grab-8|dup-t |swap-t|
-+---+------+------+------+------+------+------+------+------+
-|216|dpop  |...   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-|224|bury-3|bury-4|bury-5|bury-6|bury-7|bury-8|grab-t|bury-t|
-+---+------+------+------+------+------+------+------+------+
-|232|pickif|...   |...   |...   |...   |...   |...   |...   |
-+---+------+------+------+------+------+------+------+------+
-```
-
-- `{dup/swap/grab/bury}-t` operate according to the value in the top of the
-  data stack.
-- `lit` pushes an immediate value
-
-
 Notes:
 - `-d`: Double word (64 bits)
 - `-w`: Word (64 bits)
 - `-h`: Half word (64 bits)
 - `-b`: Byte (8 bits)
 - `-i`: Immediate
+
+Encoding immediates:
+```
+[opcode][x_byte0]...[x_byte{n-1}]
+```
+- Can be a packed representation.
 
 To-do:
 - Floating-point operations (arithmetic, comparisons, etc.)
@@ -157,11 +56,9 @@ To-do:
   - Files?
 - Operations on the call stack
 - An `eval` opcode?
-  - Treats the top of the data stack as an opcode
+  - Treats the top of the data stack as an opcode.
 
-### Stack effects
-
-Notation:
+Stack notation:
 ```
 +------------------------- Bottom of the stack
 |
@@ -170,6 +67,45 @@ Notation:
 v                      v
 |x{n-1} x{n-2} ... x1 x0]
 ```
+
+Control:
+- `halt`:
+  - Stops the program. It has no effect on the data and return stacks.
+- `jump`:
+  - `|... p]` --> `|...]`
+  - Sets the value of the program counter to `p` and jumps to the point in the
+    program indicated by this value.
+- `jump-i[p]`:
+  - Sets the value of the program counter to `p` and jumps to the point in the
+    program indicated by this value.
+  - It has no effect on the data and return stacks.
+- `jz`:
+  - `|... x p]` --> `|...]`
+  - If `x == 0`, sets the value of the program counter to `p` and jumps to the
+    point in the program indicated by this value; otherwise, increments the
+    program counter.
+- `jz-i[p]`:
+  - `|... x]` --> `|...]`
+  - Same as `jz`, but `p` is an immediate.
+- `jnz`:
+  - `|... x p]` --> `|...]`
+  - If `x != 0`, sets the value of the program counter to `p` and jumps to the
+    point in the program indicated by this value; otherwise, increments the
+    program counter.
+- `jnz-i[p]`:
+  - `|... x]` --> `|...]`
+  - Same as `jnz`, but `p` is an immediate.
+- `call`:
+  - Data stack: `|... p]` --> `|...]`
+  - Call stack: `|...]` --> `|... PC]`
+  - Pushes the current values of the program counter onto the call stack and
+    then jumps to the point in the program given by `p`.
+- `call-i[p]`:
+  - Same as `call`, but `p` is an immediate.
+- `ret`:
+  - Call stack: `|... PC]` -> `|...]`
+  - Pops the value of the top of the call stack and sets the program counter to
+    it.
 
 Arithmetic and bitwise integer operations:
 - `and-{d/w/h/b}`:
@@ -293,6 +229,7 @@ Memory:
 Stack manipulation:
 - `lit[x]`:
   - `|...]` --> `|... x]`
+  - `x` is an immediate.
 - `pop`:
   - `|... x0]` --> `|...]`
 - `dpop`:
@@ -364,3 +301,74 @@ Stack manipulation:
   - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x7 x6 x5 x4 x3 x2 x1]`
 - `bury-t`:
   - `|... x{n} x{n-1} ... x1 x0 n]` --> `|... x0 x{n} x{n-1} ... x1]`
+
+
+Bytecode representation:
+
+- The correspondent bytecode value is `(column + row)`.
+
+```
++---+------+------+------+------+------+------+------+------+
+|\\\| +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   |
++---+------+------+------+------+------+------+------+------+
+|  0|halt  |jump  |jump-i|jz    |jz-i  |jnz   |jnz-i |call  |
++---+------+------+------+------+------+------+------+------+
+|  8|call-i|ret   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+| 16|and-d |or-d  |xor-d |not-d |sll-d |slr-d |sar-d |inc-d |
++---+------+------+------+------+------+------+------+------+
+| 24|dec-d |add-d |sub-d |neg-d |mul-d |udiv-d|sdiv-d|umod-d|
++---+------+------+------+------+------+------+------+------+
+| 32|smod-d|eq-d  |neq-d |isz-d |isnz-d|ult-d |slt-d |ugt-d |
++---+------+------+------+------+------+------+------+------+
+| 40|sgt-d |uleq-d|sleq-d|ugeq-d|sgeq-d|...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+| 48|and-w |or-w  |xor-w |not-w |sll-w |slr-w |sar-w |inc-w |
++---+------+------+------+------+------+------+------+------+
+| 56|dec-w |add-w |sub-w |neg-w |mul-w |udiv-w|sdiv-w|umod-w|
++---+------+------+------+------+------+------+------+------+
+| 64|smod-w|eq-w  |neq-w |isz-w |isnz-w|ult-w |slt-w |ugt-w |
++---+------+------+------+------+------+------+------+------+
+| 72|sgt-w |uleq-w|sleq-w|ugeq-w|sgeq-w|...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+| 80|and-h |or-h  |xor-h |not-h |sll-h |slr-h |sar-h |inc-h |
++---+------+------+------+------+------+------+------+------+
+| 88|dec-h |add-h |sub-h |neg-h |mul-h |udiv-h|sdiv-h|umod-h|
++---+------+------+------+------+------+------+------+------+
+| 96|smod-h|eq-h  |neq-h |isz-h |isnz-h|ult-h |slt-h |ugt-h |
++---+------+------+------+------+------+------+------+------+
+|104|sgt-h |uleq-h|sleq-h|ugeq-h|sgeq-h|...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|112|and-b |or-b  |xor-b |not-b |sll-b |slr-b |sar-b |inc-b |
++---+------+------+------+------+------+------+------+------+
+|120|dec-b |add-b |sub-b |neg-b |mul-b |udiv-b|sdiv-b|umod-b|
++---+------+------+------+------+------+------+------+------+
+|128|smod-b|eq-b  |neq-b |isz-b |isnz-b|ult-b |slt-b |ugt-b |
++---+------+------+------+------+------+------+------+------+
+|136|sgt-b |uleq-b|sleq-b|ugeq-b|sgeq-b|...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|144|ld-d  |ld-w  |ld-h  |ld-b  |ldi-d |ldi-w |ldi-h |ldi-b |
++---+------+------+------+------+------+------+------+------+
+|152|st-d  |st-w  |st-h  |st-b  |sti-d |sti-w |sti-h |sti-b |
++---+------+------+------+------+------+------+------+------+
+|160|sxt-bd|sxt-bw|sxt-bh|sxt-hd|sxt-hw|sxt-wd|trc-w |trc-h |
++---+------+------+------+------+------+------+------+------+
+|168|trc-b |...   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|176|dup-1 |dup-2 |dup-3 |dup-4 |dup-5 |dup-6 |dup-7 |dup-8 |
++---+------+------+------+------+------+------+------+------+
+|184|lit   |...   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|192|swap-1|swap-2|swap-3|swap-4|swap-5|swap-6|swap-7|swap-8|
++---+------+------+------+------+------+------+------+------+
+|200|pop   |...   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|208|grab-3|grab-4|grab-5|grab-6|grab-7|grab-8|dup-t |swap-t|
++---+------+------+------+------+------+------+------+------+
+|216|dpop  |...   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+|224|bury-3|bury-4|bury-5|bury-6|bury-7|bury-8|grab-t|bury-t|
++---+------+------+------+------+------+------+------+------+
+|232|pickif|...   |...   |...   |...   |...   |...   |...   |
++---+------+------+------+------+------+------+------+------+
+```
