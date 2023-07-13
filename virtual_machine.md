@@ -158,3 +158,48 @@ To-do:
 - Operations on the call stack
 - An `eval` opcode?
   - Treats the top of the data stack as an opcode
+
+### Stack effects
+
+Arithmetic and bitwise integer operations:
+- `and-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 & x0)]`
+- `or-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 | x0)]`
+- `xor-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 ^ x0)]`
+- `not-{d/w/h/b}`:
+  - `|... x]` --> `|... ~x]`
+- `sll-{d/w/h/b}`:
+  - `|... x s]` --> `|... (x << s)]`
+- `slr-{d/w/h/b}`:
+  - `|... x s]` --> `|... (x >> s)]`
+  - Shifts *all* the bits (included the *sign* bit if signed).
+- `sar-{d/w/h/b}`:
+  - `|... x s]` --> `|... (x >> s)]`
+  - Shifts all the bits except the sign bit, doing a *sign extension*.
+  - A.K.A. *arithmetic shift*.
+- `inc-{d/w/h/b}`:
+  - `|... x]` --> `|... (x + 1)]`
+- `dec-{d/w/h/b}`:
+  - `|... x]` --> `|... (x - 1)]`
+- `add-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 + x0)]`
+- `sub-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 - x0)]`
+- `neg-{d/w/h/b}`:
+  - `|... x]` --> `|... (-x)]`
+- `mul-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 * x0)]`
+- `udiv-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 / x0)]`
+  - `x1` and `x0` are taken as unsigned values.
+- `sdiv-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 / x0)]`
+  - `x1` and `x0` are taken as signed values.
+- `umod-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 % x0)]`
+  - `x1` and `x0` are taken as unsigned values.
+- `smod-{d/w/h/b}`:
+  - `|... x1 x0]` --> `|... (x1 % x0)]`
+  - `x1` and `x0` are taken as signed values.
