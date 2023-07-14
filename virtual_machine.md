@@ -421,8 +421,8 @@ f(n) = f(n-1) + f(n-2)
   [
     dup-1 lit[1] leq-d
     jnz-i[@fibonacci-end]
-    dec-d dup dec-d add-d
-    jump-i[@fibonacci-end]
+    dec-d dup-1 dec-d add-d
+    jump-i[@fibonacci]
   ]
 ]
 @[fibonacci-end [ret]]
