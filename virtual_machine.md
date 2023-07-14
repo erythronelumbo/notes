@@ -400,30 +400,21 @@ Macros - logical operators
 #[LOGICAL-OR [isnz-d swap-1 isnz-d or-b]]
 
 >:
-Labels - n-th Fibonacci number
-f(0) = 0
-f(1) = 1
-f(n) = f(n-1) + f(n-2)
+Labels - bitwise 64-bit right rotation
 
-|... n]
-|... n n]
-|... n n 1]
-|... n (n<=1)]
-|... n 0]
-|... n]
-|... (n-1)]
-|... (n-1) (n-1)]
-|... (n-1) (n-2)]
-|... ((n-1)+(n-2))]
+|... x r]
+|... x r x]
+|... x r x r]
+|... x r (x>>r)]
+|... (x>>r) x r]
+|... (x>>r) x (-r)]
+|... (x>>r) x (-r) 63]
+|... (x>>r) x ((-r)&63)]
+|... (x>>r) (x<<((-r)&63))]
+|... (x>>r)|(x<<((-r)&63))]
 <:
 @[
-  fibonacci
-  [
-    dup-1 lit[1] leq-d
-    jnz-i[@fibonacci-end]
-    dec-d dup-1 dec-d add-d
-    jump-i[@fibonacci]
-  ]
+  rotr64
+  [dup-2 dup-2 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret]
 ]
-@[fibonacci-end [ret]]
 ```
