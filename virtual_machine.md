@@ -378,7 +378,7 @@ Bytecode representation:
 TODO: Complete
 
 - It should make possible the writing of *one-liners*.
-- Labels: `$[label-name [<ops>...]]`
+- Labels: `@[label-name [<ops>...]]`
 - Macros: `#[MACRO-NAME [<ops>...]]`
 - "Typed" integer literals:
   - `<integer_repr>_<type>` (example: `-1424553_i32`)
@@ -399,7 +399,7 @@ Macros - logical operators
 #[LOGICAL-AND [isnz-d swap-1 isnz-d and-b]]
 #[LOGICAL-OR [isnz-d swap-1 isnz-d or-b]]
 
-:>
+>:
 Labels - n-th Fibonacci number
 f(0) = 0
 f(1) = 1
@@ -409,20 +409,20 @@ f(n) = f(n-1) + f(n-2)
 |... n n]
 |... n n 1]
 |... n (n<=1)]
-|... n 1]
+|... n 0]
 |... n]
 |... (n-1)]
 |... (n-1) (n-1)]
 |... (n-1) (n-2)]
 |... ((n-1)+(n-2))]
-:<
+<:
 @[
   fibonacci
   [
     dup-1 lit[1] leq-d
-    jnz[@fibonacci-end]
+    jnz-i[@fibonacci-end]
     dec-d dup dec-d add-d
-    jump[@fibonacci-end]
+    jump-i[@fibonacci-end]
   ]
 ]
 @[fibonacci-end [ret]]
