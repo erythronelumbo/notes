@@ -48,6 +48,12 @@ Encoding immediates:
 To-do:
 - Floating-point operations (arithmetic, comparisons, etc.)
   - Also functions like `sin`, `cos` and the like?
+- Arithmetic operations with an immediate operand (?)
+  - With a *prefix* byte before the opcode
+- More arithmetic and bitwise operations (like modular multiplication, modular
+  inverse, modular exponentiation, popcount, counting trailing/leading zeros,
+  absolute value and sign)?
+  - Indicated with a *prefix* byte
 - Interaction (I/O) with *external devices*:
   - Standard input and outputs
   - Screen
@@ -313,7 +319,7 @@ Bytecode representation:
 +---+------+------+------+------+------+------+------+------+
 |  0|halt  |jump  |jump-i|jz    |jz-i  |jnz   |jnz-i |call  |
 +---+------+------+------+------+------+------+------+------+
-|  8|call-i|ret   |...   |...   |...   |...   |...   |...   |
+|  8|call-i|ret   |rz    |rnz   |...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
 | 16|and-d |or-d  |xor-d |not-d |sll-d |slr-d |sar-d |inc-d |
 +---+------+------+------+------+------+------+------+------+
