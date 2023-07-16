@@ -112,6 +112,22 @@ Control:
   - Call stack: `|... PC]` -> `|...]`
   - Pops the value of the top of the call stack and sets the program counter to
     it.
+- `rz`:
+  - Data stack: `|... x]` --> `|... x]`
+  - Call stack:
+    - `|... PC]` --> `|...]` if `x == 0`
+    - Unchanged if `x != 0`
+  - If the top of the data stack is zero, pops the value on the top of the call
+    stack and sets the program counter to it; otherwise, the call stack will be
+    unchanged.
+- `rnz`:
+  - Data stack: `|... x]` --> `|... x]`
+  - Call stack:
+    - `|... PC]` --> `|...]` if `x != 0`
+    - Unchanged if `x == 0`
+  - If the top of the data stack is not zero, pops the value on the top of the
+    call stack and sets the program counter to it; otherwise, the call stack
+    will be unchanged.
 
 Arithmetic and bitwise integer operations:
 - `and-{d/w/h/b}`:
