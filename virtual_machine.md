@@ -423,4 +423,34 @@ Labels - bitwise 64-bit right rotation
   rotr64
   [dup-2 dup-2 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret]
 ]
+
+>:
+Labels - Fibonacci
+f(0) = 0
+f(1) = 1
+f(n) = f(n-1)+f(n-2)
+
+|... n]
+|... n n] dup-1
+|... n n 1] lit[1]
+|... n (n<=1)] uleq-d (where (n<=1)==1)
+|... n] jnz-i[@fib-end]
+|... (n-1)] dec-d
+|... (n-1) (n-1)] dup-1
+|... (n-1) (n-2)] dec-d
+|... (n-1) f(n-2)] call[@fibonacci]
+|... f(n-2) (n-1)] swap-1
+|... f(n-2) f(n-1)] call[@fibonacci]
+|... (f(n-2)+f(n-1))] add-d
+|... (f(n-2)+f(n-1))] ret
+<:
+@[
+  fibonacci
+  [
+    dup-1 lit[1] uleq-d jnz-i[@fibonacci-end]
+    dec-d dup-1 call[@fibonacci]
+    swap-1 call[@fibonacci] add-d
+  ]
+]
+@[fibonacci-end [ret]]
 ```
