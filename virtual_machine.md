@@ -35,8 +35,8 @@
 
 Notes:
 - `-d`: Double word (64 bits)
-- `-w`: Word (64 bits)
-- `-h`: Half word (64 bits)
+- `-w`: Word (32 bits)
+- `-h`: Half word (16 bits)
 - `-b`: Byte (8 bits)
 - `-i`: Immediate
 
