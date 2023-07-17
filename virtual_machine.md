@@ -2,6 +2,7 @@
 
 - Type: Stack machine
 - Assumes that signed integers are represented as two's complement.
+- Also assumes IEEE 754 floating point types (32 and 64 bits).
 - State:
   - Data/operand stack: 256 64-bit elements.
   - Call/return stack: 256 64-bit elements.
@@ -47,6 +48,7 @@ Encoding immediates:
 
 To-do:
 - Floating-point operations (arithmetic, comparisons, etc.)
+  - `f{add,sub,mul,div,neg,eq,neq,gt,lt,geq,neq}-{w,d}` (22 instrs.)
   - Also functions like `sin`, `cos` and the like?
 - Arithmetic operations with an immediate operand (?)
   - With a *prefix* byte before the opcode
@@ -379,19 +381,19 @@ Bytecode representation:
 +---+------+------+------+------+------+------+------+------+
 |176|dup-1 |dup-2 |dup-3 |dup-4 |dup-5 |dup-6 |dup-7 |dup-8 |
 +---+------+------+------+------+------+------+------+------+
-|184|lit   |...   |...   |...   |...   |...   |...   |...   |
+|184|grab-3|grab-4|grab-5|grab-6|grab-7|grab-8|dup-t |grab-t|
 +---+------+------+------+------+------+------+------+------+
 |192|swap-1|swap-2|swap-3|swap-4|swap-5|swap-6|swap-7|swap-8|
 +---+------+------+------+------+------+------+------+------+
-|200|pop   |...   |...   |...   |...   |...   |...   |...   |
+|200|bury-3|bury-4|bury-5|bury-6|bury-7|bury-8|swap-t|bury-t|
 +---+------+------+------+------+------+------+------+------+
-|208|grab-3|grab-4|grab-5|grab-6|grab-7|grab-8|dup-t |swap-t|
+|208|lit   |pop   |dpop  |pickif|...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
-|216|dpop  |...   |...   |...   |...   |...   |...   |...   |
+|216|...   |...   |...   |...   |...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
-|224|bury-3|bury-4|bury-5|bury-6|bury-7|bury-8|grab-t|bury-t|
+|224|...   |...   |...   |...   |...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
-|232|pickif|...   |...   |...   |...   |...   |...   |...   |
+|232|...   |...   |...   |...   |...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
 |240|...   |...   |...   |...   |...   |...   |...   |...   |
 +---+------+------+------+------+------+------+------+------+
@@ -405,9 +407,10 @@ TODO: Complete
 
 - It should make possible the writing of *one-liners*.
 - Labels: `@[label-name [<ops>...]]`
+  - Alternative: `@[label1] <ops1>... @[label2] <ops2>...`
 - Macros: `#[MACRO-NAME [<ops>...]]`
 - "Typed" integer literals:
-  - `<integer_repr>_<type>` (example: `-1424553_i32`)
+  - `<integer_repr>_<type>` (example: `-1424553_i32`, `NaN_f64`)
 - Comments:
   - Multiple lines: `>: ...content... <:`
 
