@@ -113,7 +113,7 @@ Control:
   - Pops the value of the top of the call stack and sets the program counter to
     it.
 - `rz`:
-  - Data stack: `|... x]` --> `|... x]`
+  - Data stack: `|... x]` --> `|...]`
   - Call stack:
     - `|... PC]` --> `|...]` if `x == 0`
     - Unchanged if `x != 0`
@@ -121,7 +121,7 @@ Control:
     stack and sets the program counter to it; otherwise, the call stack will be
     unchanged.
 - `rnz`:
-  - Data stack: `|... x]` --> `|... x]`
+  - Data stack: `|... x]` --> `|...]`
   - Call stack:
     - `|... PC]` --> `|...]` if `x != 0`
     - Unchanged if `x == 0`
