@@ -57,11 +57,9 @@ To-do:
   absolute value and sign)?
   - Indicated with a *prefix* byte
 - Interaction (I/O) with *external devices*:
-  - Standard input and outputs
-  - Screen
-  - Mouse, keyboard
-  - A (pseudo)random number generator?
-  - Files?
+  - Standard input and outputs, screen, mouse, keyboard, a (pseudo)random number
+    generator (?), etc.
+  - Can it be done via memory-mapped I/O?
 - Operations on the call stack
 - An `eval` opcode?
   - Treats the top of the data stack as an opcode.
