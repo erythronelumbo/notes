@@ -325,6 +325,10 @@ Stack manipulation:
   - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x7 x6 x5 x4 x3 x2 x1]`
 - `bury-t`:
   - `|... x{n} x{n-1} ... x1 x0 n]` --> `|... x0 x{n} x{n-1} ... x1]`
+- `ddup-1`:
+  - `|... x1 x0]` --> `|... x1 x0 x1 x0]`
+- `ddup-2`:
+  - `|... x3 x2 x1 x0]` --> `|... x3 x2 x1 x0 x3 x2]`
 
 
 Bytecode representation:
@@ -492,10 +496,7 @@ Labels - bitwise 64-bit right rotation
 |... (x>>r) (x<<((-r)&63))]
 |... (x>>r)|(x<<((-r)&63))]
 <:
-@[
-  rotr64
-  [dup-2 dup-2 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret]
-]
+@[rotr64] dup-2 dup-2 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret
 
 >:
 Labels - Fibonacci
@@ -507,7 +508,7 @@ f(n) = f(n-1)+f(n-2)
 |... n n] dup-1
 |... n n 1] lit[1]
 |... n (n<=1)] uleq-d (where (n<=1)==1)
-|... n] jnz-i[@fib-end]
+|... n] rnz
 |... (n-1)] dec-d
 |... (n-1) (n-1)] dup-1
 |... (n-1) (n-2)] dec-d
@@ -517,13 +518,8 @@ f(n) = f(n-1)+f(n-2)
 |... (f(n-2)+f(n-1))] add-d
 |... (f(n-2)+f(n-1))] ret
 <:
-@[
-  fibonacci
-  [
-    dup-1 lit[1] uleq-d jnz-i[@fibonacci-end]
-    dec-d dup-1 call[@fibonacci]
-    swap-1 call[@fibonacci] add-d
-  ]
-]
-@[fibonacci-end [ret]]
+@[fibonacci]
+  dup-1 lit[1] uleq-d rnz
+  dec-d dup-1 call[@fibonacci]
+  swap-1 call[@fibonacci] add-d
 ```
