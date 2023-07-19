@@ -63,8 +63,14 @@ To-do:
     generator (?), etc.
   - Can it be done via memory-mapped I/O?
 - Operations on the call stack
-- An `eval` opcode?
+- An `eval` family of opcodes?
   - Treats the top of the data stack as an opcode.
+  - Possible usages:
+    - `lit[2] lit[3] lit[0x19] eval[1]` (same as `lit[2] lit[3] add-d`)
+    - `lit[4] lit[2] lit[3] lit[0x19] lit[0x1c] eval[2]` (same as
+      `lit[4] lit[2] lit[3] add-d mul-d`)
+    - `lit[4] lit[2] lit[3] lit[0x19] lit[0x1c] lit[2] eval-t` (same as
+      `... eval[2]`)
 
 Stack notation:
 ```
@@ -329,6 +335,10 @@ Stack manipulation:
   - `|... x1 x0]` --> `|... x1 x0 x1 x0]`
 - `ddup-2`:
   - `|... x3 x2 x1 x0]` --> `|... x3 x2 x1 x0 x3 x2]`
+- `ddup-3`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x5 x4 x3 x2 x1 x0 x5 x4]`
+- `ddup-4`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x7 x6 x5 x4 x3 x2 x1 x0 x7 x6]`
 
 
 Bytecode representation:
