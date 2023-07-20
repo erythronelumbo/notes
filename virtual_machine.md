@@ -546,9 +546,9 @@ Bytecode table - alternative:
 +-----------------------------------------+
 |              ifun-{d/w/h/b}             |
 +------+----+----+----+----+----+----+----+ (pcnt: counts the set bits [a.k.a.
-|Suffix|abs |sign|rotl|rotr|pcnt|ctz |clz | "popcount"; ctz: counts the trailing
-+------+----+----+----+----+----+----+----+ zeros; clz: counts the leading
-|Hex   |0x00|0x01|0x02|0x03|0x04|0x05|0x06| zeros)
+|Suffix|abs |sign|rotl|rotr|pcnt|ctz |clz | "population count"]; ctz: counts the
++------+----+----+----+----+----+----+----+ trailing zeros; clz: counts the
+|Hex   |0x00|0x01|0x02|0x03|0x04|0x05|0x06| leading zeros)
 +------+----+----+----+----+----+----+----+
 
 +------------+ +------------+ +-----------------+ +------------+
