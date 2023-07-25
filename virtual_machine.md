@@ -341,7 +341,7 @@ Stack manipulation:
 
 Bytecode table:
 
-- The correspondent bytecode value is `(8*column + row)`.
+- The correspondent bytecode value is `(8*row + column)`.
 
 ```
 +--------+--------+--------+--------+--------+--------+--------+--------+
