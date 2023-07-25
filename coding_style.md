@@ -1,7 +1,25 @@
 # Coding style - C and C++
 
 - Width: 80 characters
+  - Makes the code easier to read, especially in devices with smaller screens.
+  - Useful when working with multiple windows (for example, working with two
+    files side-by-side) and when necessary to work with a bigger font size (for
+    example, at night, when using a single screen to show the code to other
+    people or when visually impaired).
+  - Long lines of code tend to be hard to read and understand.
+    - It is likely to lose the focus on such lines of code when reading them,
+      especially when the code is complex.
+    - Reading such lines also implies repeated scrolling, which can be a waste
+      of time.
+    - This width constraint also allows other people (including the programmer
+      themselves) to review the code easily.
 - Indentation: 2 spaces
+  - Useful when some code blocks have to be overly nested (for example, nested
+    *for* loops where multidimensional data structures are involved).
+  - Consistent across any facility for editing and reading plain text.
+    - Tabs can have different widths across different platforms and can vary
+      depending of the preference of other individuals or organizations.
+  - For consistency, this indentation MUST NOT be mixed with tabs.
 
 ## Naming
 
@@ -9,11 +27,13 @@
   and other types.
 - Use `UPPERCASE_WITH_UNDERSCORE` for macros.
 - (C++) For template arguments and concepts, use `PascalCase`.
+- Other names MUST have a maximum length of 32 characters.
+  - This also applies to source file names, without counting the file extension.
+  - This constraint prevents the programmer from using cumbersome, verbose
+    names.
 - Macro names MUST have a maximum length of 64 characters.
   - For include guard definitions, the respective macro names MUST have a
     maximum length of 70 characters.
-- Other names MUST have a maximum length of 32 characters.
-  - This also applies to source file names, without counting the file extension.
 
 ## Indentation
 
@@ -37,6 +57,44 @@
     else
     {
       // code...
+    }
+    ```
+  - For *switch* statements:
+    ```c
+    switch (value)
+    {
+      case value0:
+        // do something
+        break;
+      case value1:
+        {
+          // code
+        }
+        break;
+      default:
+        // do something
+        break;
+    }
+    ```
+  - For *while* loops:
+    ```c
+    while (condition)
+    {
+      // code
+    }
+    ```
+  - For *do-while* loops:
+    ```c
+    do
+    {
+      // code
+    } while (condition);
+    ```
+  - For *for* loops:
+    ```c
+    for (/*declarations*/; /*condition*/; /*update*/)
+    {
+      // code
     }
     ```
 - For functions:
@@ -126,6 +184,15 @@
     param7, param8
   >;
   ```
+- For long definitions and assignments:
+  ```c
+  /*qualifiers...*/ /*value_type*/ my_value = (
+    /* a really long expression */
+    /* another line from the really long expression */
+    /* more lines... */
+  );
+  ```
+  - TODO: String literals with multiple lines.
 
 ### Function declaration and definition
 
@@ -222,3 +289,72 @@ template <
 
 `TemplateInput<n>` can be `typename`, `class`, a template template or any type
 (i.e. integral or pointer) that can be used in such context.
+
+
+## Structs and C++ classes
+
+Struct definition in C:
+
+```c
+struct my_data_type
+{
+  // data members
+};
+
+typedef struct my_data_type_1
+{
+  // data members
+} my_data_type_1;
+```
+
+Struct and class definition in C++:
+```cpp
+struct my_data_type
+{
+  // data members
+};
+
+class my_class
+{
+  public:
+    // public members
+  protected:
+    // protected members
+  private:
+    // private members
+};
+```
+
+### (C++) Inheritance:
+
+In a same line:
+```cpp
+class derived_1 : base_1, base_2, base_3
+{
+  // code
+};
+```
+
+In the following lines:
+```cpp
+class derived_2 :
+  base_1, base_2, base_3
+{
+  // code
+};
+
+class derived_3 :
+  base_1,
+  base_2,
+  base_3
+{
+  // code
+};
+
+class derived_4 :
+  base_1, base_2,
+  base_3
+{
+  // code
+};
+```
