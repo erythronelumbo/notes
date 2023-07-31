@@ -3,6 +3,7 @@
 - Type: Stack machine
 - Assumes that signed integers are represented as two's complement.
 - Also assumes IEEE 754 floating point types (32 and 64 bits).
+  - A *soft-float* implementation can be used if necessary.
 - State:
   - Data/operand stack: 256 64-bit elements.
   - Call/return stack: 256 64-bit elements.
@@ -169,112 +170,117 @@ Control:
     number of inputs (`n`) and outputs (`m`) depends on the device.
 
 Arithmetic and bitwise integer operations:
-- `and-{d/w/h/b}`:
+- `and-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 & x0)]`
-- `or-{d/w/h/b}`:
+- `or-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 | x0)]`
-- `xor-{d/w/h/b}`:
+- `xor-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 ^ x0)]`
-- `not-{d/w/h/b}`:
+- `not-{d/w}`:
   - `|... x]` --> `|... ~x]`
-- `sll-{d/w/h/b}`:
+- `sll-{d/w}`:
   - `|... x s]` --> `|... (x << s)]`
-- `slr-{d/w/h/b}`:
+- `slr-{d/w}`:
   - `|... x s]` --> `|... (x >> s)]`
   - Shifts *all* the bits (included the *sign* bit if signed).
-- `sar-{d/w/h/b}`:
+- `sar-{d/w}`:
   - `|... x s]` --> `|... (x >> s)]`
   - Shifts all the bits except the sign bit, doing a *sign extension*.
   - A.K.A. *arithmetic shift*.
-- `inc-{d/w/h/b}`:
+- `inc-{d/w}`:
   - `|... x]` --> `|... (x + 1)]`
-- `dec-{d/w/h/b}`:
+- `dec-{d/w}`:
   - `|... x]` --> `|... (x - 1)]`
-- `add-{d/w/h/b}`:
+- `add-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 + x0)]`
-- `sub-{d/w/h/b}`:
+- `sub-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 - x0)]`
-- `neg-{d/w/h/b}`:
+- `neg-{d/w}`:
   - `|... x]` --> `|... (-x)]`
-- `mul-{d/w/h/b}`:
+- `mul-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 * x0)]`
-- `udiv-{d/w/h/b}`:
+- `udiv-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 / x0)]`
   - `x1` and `x0` are taken as unsigned values.
-- `sdiv-{d/w/h/b}`:
+- `sdiv-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 / x0)]`
   - `x1` and `x0` are taken as signed values.
-- `umod-{d/w/h/b}`:
+- `umod-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 % x0)]`
   - `x1` and `x0` are taken as unsigned values.
-- `smod-{d/w/h/b}`:
+- `smod-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 % x0)]`
   - `x1` and `x0` are taken as signed values.
+- `ifun-{d/w}[<function>]`:
+  - `|... x0]` --> `|... function(x0)]` (if `<function>` is unary)
+  - `|... x1 x0]` --> `|... function(x1, x0)]` (if `<function>` is binary)
+  - Example: `ifun-d[ctz] swap-1 ifun-d[ctz] ifun-d[min]`
 
 Integer predicates:
 - The result of each one of these operations is `1` when true or `0` when false.
-- `isz-{d/w/h/b}`:
+- `isz-{d/w}`:
   - `|... x]` --> `|... (x == 0)]`
-- `isnz-{d/w/h/b}`:
+- `isnz-{d/w}`:
   - `|... x]` --> `|... (x != 0)]`
-- `eq-{d/w/h/b}`:
+- `eq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 == x0)]`
-- `neq-{d/w/h/b}`:
+- `neq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 != x0)]`
-- `ult-{d/w/h/b}`:
+- `ult-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 < x0)]`
   - The operands are read as unsigned values.
-- `slt-{d/w/h/b}`:
+- `slt-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 < x0)]`
   - The operands are read as signed values.
-- `ugt-{d/w/h/b}`:
+- `ugt-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 > x0)]`
   - The operands are read as unsigned values.
-- `sgt-{d/w/h/b}`:
+- `sgt-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 > x0)]`
   - The operands are read as signed values.
-- `uleq-{d/w/h/b}`:
+- `uleq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 <= x0)]`
   - The operands are read as unsigned values.
-- `sleq-{d/w/h/b}`:
+- `sleq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 <= x0)]`
   - The operands are read as signed values.
-- `ugeq-{d/w/h/b}`:
+- `ugeq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 >= x0)]`
   - The operands are read as unsigned values.
-- `sgeq-{d/w/h/b}`:
+- `sgeq-{d/w}`:
   - `|... x1 x0]` --> `|... (x1 >= x0)]`
   - The operands are read as signed values.
 
+
 Memory:
-- `ld-{d/w/h/b}`:
+- `ld-{d/w}`:
   - `|... addr]` --> `|... memory[addr]]`
-- `ldi-{d/w/h/b}[addr]`:
+- `ldi-{d/w}[addr]`:
   - `|...]` --> `|... memory[addr]]`
-- `st-{d/w/h/b}`:
+- `st-{d/w}`:
   - `|... x addr]` --> `|...]`
   - `x` will be stored in `memory[addr]`.
-- `sti-{d/w/h/b}[addr]`:
+- `sti-{d/w}[addr]`:
   - `|... x]` --> `|...]`
   - `x` will be stored in `memory[addr]`.
 
 "Conversion" between integers:
-- `sxt-bd`:
+- `sxt-b-d`:
   - `|... x]` --> `|... sign_extend_8to64bits(x)]`
   - Extends the sign of an 8-bit integer to 64 bits.
-- `sxt-bw`:
+- `sxt-b-w`:
   - `|... x]` --> `|... sign_extend_8to32bits(x)]`
   - Extends the sign of an 8-bit integer to 32 bits.
-- `sxt-bh`:
+- `sxt-b-h`:
   - `|... x]` --> `|... sign_extend_8to16bits(x)]`
   - Extends the sign of an 8-bit integer to 16 bits.
-- `sxt-hd`:
+- `sxt-h-d`:
   - `|... x]` --> `|... sign_extend_16to64bits(x)]`
   - Extends the sign of a 16-bit integer to 64 bits.
-- `sxt-hw`:
+- `sxt-h-w`:
   - `|... x]` --> `|... sign_extend_16to32bits(x)]`
   - Extends the sign of a 16-bit integer to 32 bits.
-- `sxt-wd`:
+- `sxt-w-d`:
   - `|... x]` --> `|... sign_extend_32to64bits(x)]`
   - Extends the sign of a 32-bit integer to 64 bits.
 - `trc-w`:
@@ -305,13 +311,51 @@ Stack manipulation:
 - `pick[n]`:
   - `|... x{n-1} ... x1 x0 i]` --> `|... x{i}]`
   - `1 <= i <= 255`
-- `dup[i]`:
-  - `|... x{i} ... x0]` --> `|... x{i} ... x0 x{i}]`
+- `ctcs`:
+  - Data stack: `|...]` --> `|... c]`
+  - Call stack: `|... c]` --> `|... c]` (unchanged)
+  - "\[C\]opy \[t\]op of \[c\]all \[s\]tack"
+- `dtoc`:
+  - Data stack: `|... x]` --> `|...]`
+  - Call stack: `|...]` --> `|... x]`
+- `ctod`:
+  - Data stack: `|...]` --> `|... x]`
+  - Call stack: `|... x]` --> `|...]`
+- `dup-1`:
+  - `|... x0]` --> `|... x0 x0]`
+- `dup-2`:
+  - `|... x1 x0]` --> `|... x1 x0 x1]`
+- `dup-3`:
+  - `|... x2 x1 x0]` --> `|... x2 x1 x0 x2]`
+- `dup-4`:
+  - `|... x3 x2 x1 x0]` --> `|... x3 x2 x1 x0 x3]`
+- `dup-5`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x4 x3 x2 x1 x0 x4]`
+- `dup-6`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x5 x4 x3 x2 x1 x0 x5]`
+- `dup-7`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x6 x5 x4 x3 x2 x1 x0 x6]`
+- `dup-8`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x7 x6 x5 x4 x3 x2 x1 x0 x7]`
 - `dup-x`:
   - `|... x{i} ... x0 i]` --> `|... x{i} ... x0 x{i}]`
   - `0 <= i <= 255`
-- `swap[i]`:
-  - `|... x{i} ... x0]` --> `|... x0 ... x{i+1}]`
+- `swap-1`:
+  - `|... x1 x0]` --> `|... x0 x1]`
+- `swap-2`:
+  - `|... x2 x1 x0]` --> `|... x0 x1 x2]`
+- `swap-3`:
+  - `|... x3 x2 x1 x0]` --> `|... x0 x2 x1 x3]`
+- `swap-4`:
+  - `|... x4 x3 x2 x1 x0]` --> `|... x0 x3 x2 x1 x4]`
+- `swap-5`:
+  - `|... x5 x4 x3 x2 x1 x0]` --> `|... x0 x4 x3 x2 x1 x5]`
+- `swap-6`:
+  - `|... x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x5 x4 x3 x2 x1 x6]`
+- `swap-7`:
+  - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x6 x5 x4 x3 x2 x1 x7]`
+- `swap-8`:
+  - `|... x8 x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x0 x7 x6 x5 x4 x3 x2 x1 x8]`
 - `swap-x`:
   - `|... x{i} ... x0 i]` --> `|... x0 ... x{i+1}]`
   - `0 <= i <= 254`
@@ -370,6 +414,56 @@ Stack manipulation:
   - `|... x5 x4 x3 x2 x1 x0]` --> `|... x1 x0 x5 x4 x3 x2]`
 - `dbury-4`:
   - `|... x7 x6 x5 x4 x3 x2 x1 x0]` --> `|... x1 x0 x7 x6 x5 x4 x3 x2]`
+
+Floating point operations:
+- `fadd-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 + x0)]`
+- `fsub-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 - x0)]`
+- `fneg-{d/w}`:
+  - `|... x]` --> `|... (-x)]`
+- `fmul-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 * x0)]`
+- `fdiv-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 / x0)]`
+- `feq-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 == x0)]`
+- `fneq-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 != x0)]`
+- `flt-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 < x0)]`
+- `fgt-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 > x0)]`
+- `fleq-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 <= x0)]`
+- `fgeq-{d/w}`:
+  - `|... x1 x0]` --> `|... (x1 >= x0)]`
+- `ffun-{d/w}[<function>]`:
+  - `|... x0]` --> `|... function(x0)]` (if `<function>` is unary)
+  - `|... x1 x0]` --> `|... function(x1, x0)]` (if `<function>` is binary)
+  - Example: `dup-1 fmul-d swap-1 dup-1 fmul-d fadd-d ffun-d[sqrt]`
+
+Conversions between integral and floating-point values:
+- `fic-d-d`:
+  - `|... x]` --> `|... float64_to_int64(x)]`
+- `fic-d-w`:
+  - `|... x]` --> `|... float64_to_int32(x)]`
+- `fic-w-d`:
+  - `|... x]` --> `|... float32_to_int64(x)]`
+- `fic-w-w`:
+  - `|... x]` --> `|... float32_to_int32(x)]`
+- `ifc-d-d`:
+  - `|... x]` --> `|... int64_to_float64(x)]`
+- `ifc-d-w`:
+  - `|... x]` --> `|... int64_to_float32(x)]`
+- `ifc-w-d`:
+  - `|... x]` --> `|... int32_to_float64(x)]`
+- `ifc-w-w`:
+  - `|... x]` --> `|... int32_to_float32(x)]`
+- `ffc-d-w`:
+  - `|... x]` --> `|... float64_to_float32(x)]`
+- `ffc-w-d`:
+  - `|... x]` --> `|... float32_to_float64(x)]`
 
 
 Bytecode table:
@@ -431,32 +525,32 @@ Bytecode table:
 ```
 
 
-`ifun-{d/w/h/b}` and `{fops/fcmp/fcnv/ffun}-{d/w}` are *prefixes*:
+`ifun-{d/w}` and `{fops/fcmp/fcnv/ffun}-{d/w}` are *prefixes*:
 ```
-+------------------------------------------+
-|              ifun-{d/w/h/b}              |
-+------++----+----+----+----+----+----+----+ (pcnt: counts the set bits [a.k.a.
-|Suffix||abs |sign|rotl|rotr|pcnt|ctz |clz | "population count"]; ctz: counts
-+------++----+----+----+----+----+----+----+ the trailing zeros; clz: counts the
-|Hex   ||0x00|0x01|0x02|0x03|0x04|0x05|0x06| leading zeros)
-+------++----+----+----+----+----+----+----+
++----------------------------------------------------+
+|                     ifun-{d/w}                     |
++------++----+----+----+----+----+----+----+----+----+
+|Suffix||abs |sign|max |min |rotl|rotr|pcnt|ctz |clz |
++------++----+----+----+----+----+----+----+----+----+
+|Hex   ||0x00|0x01|0x02|0x03|0x04|0x05|0x06|0x07|0x08|
++------++----+----+----+----+----+----+----+----+----+
 
 +------------------------------------------------------+
 |                      ffun-{d/w}                      |
 +-------+----++-------+----++-------+----++-------+----+
 |Suffix |Hex ||Suffix |Hex ||Suffix |Hex ||Suffix |Hex |
 +-------+----++-------+----++-------+----++-------+----+
-|abs    |0x00||sign   |0x01||mod    |0x02||floor  |0x03|
+|abs    |0x00||sign   |0x01||max    |0x02||min    |0x03|
 +-------+----++-------+----++-------+----++-------+----+
-|round  |0x04||ceil   |0x05||sqrt   |0x06||exp    |0x07|
+|mod    |0x04||floor  |0x05||round  |0x06||ceil   |0x07|
 +-------+----++-------+----++-------+----++-------+----+
-|log    |0x08||sin    |0x09||cos    |0x0a||tan    |0x0b|
+|pow    |0x08||sqrt   |0x09||exp    |0x0a||log    |0x0b|
 +-------+----++-------+----++-------+----++-------+----+
-|asin   |0x0c||acos   |0x0d||atan   |0x0e||sinh   |0x0f|
+|sin    |0x0c||cos    |0x0d||tan    |0x0e||asin   |0x0f|
 +-------+----++-------+----++-------+----++-------+----+
-|cosh   |0x10||tanh   |0x11||asinh  |0x12||acosh  |0x13|
+|acos   |0x10||atan   |0x01||sinh   |0x12||cosh   |0x13|
 +-------+----++-------+----++-------+----++-------+----+
-|atanh  |0x14||       |    ||       |    ||       |    |
+|tanh   |0x14||asinh  |0x15||acosh  |0x16||atanh  |0x17|
 +-------+----++-------+----++-------+----++-------+----+
 
 Organization:
@@ -475,16 +569,21 @@ Organization:
 TODO: Complete
 
 - It should make possible the writing of *one-liners*.
-- Labels: `@[label-name [<ops>...]]`
-  - Alternative: `@[label1] <ops1>... @[label2] <ops2>...`
+- Labels: `@label1 <ops1>... @label2 <ops2>...`
 - Macros: `#[MACRO-NAME [<ops>...]]`
 - "Typed" integer literals:
   - `<integer_repr>_<type>` (example: `-1424553_i32`, `NaN_f64`)
 - Comments:
   - Multiple lines: `>: ...content... <:`
 - Directives:
-  - `.<dir-name>(<args>...)`
-  - Example: `.str["Hello, world!]" .table-h[0b1001011010100101 0xabcd -12345]`
+  - `.<dir-name>([<args>...])`
+  - Example:
+    ```
+    .data
+    .str["Hello, world!"] .table-h[0b1001011010100101 0xabcd -12345]
+    @factorials
+    .table-w[0 1 2 6 24 120 720 5040 40320 362880 3628800 39916800 479001600]
+    ```
 
 *Mock-up* example:
 
@@ -504,7 +603,6 @@ Macros - logical operators
 Labels - bitwise 64-bit right rotation
 
 |... x r]
-|... x r x]
 |... x r x r]
 |... x r (x>>r)]
 |... (x>>r) x r]
@@ -514,7 +612,7 @@ Labels - bitwise 64-bit right rotation
 |... (x>>r) (x<<((-r)&63))]
 |... (x>>r)|(x<<((-r)&63))]
 <:
-@[rotr64] dup-2 dup-2 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret
+@rotr64 ddup-1 slr-d bury-3 neg-d lit[63] and-d sll-d or-d ret
 
 >:
 Labels - Fibonacci
@@ -530,14 +628,13 @@ f(n) = f(n-1)+f(n-2)
 |... (n-1)] dec-d
 |... (n-1) (n-1)] dup-1
 |... (n-1) (n-2)] dec-d
-|... (n-1) f(n-2)] call[@fibonacci]
+|... (n-1) f(n-2)] call-i[:fibonacci]
 |... f(n-2) (n-1)] swap-1
-|... f(n-2) f(n-1)] call[@fibonacci]
+|... f(n-2) f(n-1)] call-i[:fibonacci]
 |... (f(n-2)+f(n-1))] add-d
 |... (f(n-2)+f(n-1))] ret
 <:
-@[fibonacci]
-  dup-1 lit[1] uleq-d rnz
-  dec-d dup-1 call[@fibonacci]
-  swap-1 call[@fibonacci] add-d
+@fibonacci
+dup-1 lit[1] uleq-d rnz
+dec-d dup-1 call-i[:fibonacci] swap-1 call-i[:fibonacci] add-d ret
 ```
