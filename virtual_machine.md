@@ -214,6 +214,47 @@ Arithmetic and bitwise integer operations:
 - `ifun-{d/w}[<function>]`:
   - `|... x0]` --> `|... function(x0)]` (if `<function>` is unary)
   - `|... x1 x0]` --> `|... function(x1, x0)]` (if `<function>` is binary)
+  - `<function>` can be one of the following:
+    - `abs`:
+      - `|... x]` --> `|... x]` (if `x >= 0`)
+      - `|... x]` --> `|... -x]` (if `x < 0`)
+      - The absolute value of a signed integer.
+    - `sign` (unary):
+      - `|... x]` --> `|... 1]` (if `x > 0`)
+      - `|... x]` --> `|... 0]` (if `x == 0`)
+      - `|... x]` --> `|... -1]` (if `x < 0`)
+      - The sign of a signed integer: 1 if positive, -1 if negative or 0 if
+        zero.
+    - `umax`:
+      - `|... x1 x0]` --> `|... umax(x1, x0)]`
+      - The maximum of two unsigned integers.
+    - `smax`:
+      - `|... x1 x0]` --> `|... smax(x1, x0)]`
+      - The maximum of two signed integers.
+    - `umin`:
+      - `|... x1 x0]` --> `|... umin(x1, x0)]`
+      - The minimum of two unsigned integers.
+    - `smin`:
+      - `|... x1 x0]` --> `|... smin(x1, x0)]`
+      - The minimum of two signed integers.
+    - `rotl`:
+      - `|... x r]` --> `|... rotl(x, r)]`
+      - Rotates the bits of an unsigned integer by `r` places to the left.
+    - `rotr`:
+      - `|... x r]` --> `|... rotl(x, r)]`
+      - Rotates the bits of an unsigned integer by `r` places to the right.
+    - `pcnt`:
+      - `|... x]` --> `|... popcount(x)]`
+      - Counts the bits set (i.e. the number of bits that are one) of an
+        integer. Also known as *Hamming weight*.
+    - `ctz`:
+      - `|... x]` --> `|... ctz(x)]`
+      - Counts the trailing zeros of an unsigned integer, starting from the most
+        significant bit.
+    - `clz`:
+      - `|... x]` --> `|... clz(x)]`
+      - Counts the leading zeros of an unsigned integer, starting from the least
+        significant bit.
   - Example: `ifun-d[ctz] swap-1 ifun-d[ctz] ifun-d[min]`
 
 Integer predicates:
