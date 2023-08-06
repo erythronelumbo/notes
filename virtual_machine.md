@@ -512,6 +512,15 @@ Bytecode table:
 - The correspondent bytecode value is `(row + column)`.
 
 ```
+Organization:
+- Control:                    [ 0| 0| 0| 0|x3|x2|x1|x0] (0x00~0x0f)
+- Memory operations:          [ 0| 0| 0| 1|x3|x2|x1|x0] (0x10~0x1f)
+- Integer conversions:        [ 0| 0| 1| 0|x3|x2|x1|x0] (0x20~0x2f)
+- Stack manipulation:         [ 0| 1|o5|o4|o3|o2|o1|o0] (0x40~0x7f)
+- Integral operations:        [ 1| 0|tp|o4|o3|o2|o1|o0] (0x80~0xbf)
+- Floating-point operations:  [ 1| 1| 0|o4|o3|o2|o1|o0] (0xc0~0xdf)
+- Floating-point conversions: [ 1| 1| 1| 0|o3|o2|o1|o0] (0xe0~0xef)
+
 +----++--------+--------+--------+--------+--------+--------+--------+--------+
 |    ||  0x00  |  0x01  |  0x02  |  0x03  |  0x04  |  0x05  |  0x06  |  0x07  |
 +----++--------+--------+--------+--------+--------+--------+--------+--------+
@@ -566,8 +575,15 @@ Bytecode table:
 ```
 
 
-`ifun-{d/w}` and `{fops/fcmp/fcnv/ffun}-{d/w}` are *prefixes*:
+`ifun-{d/w}` and `{fops/fcmp/fcnv/ffun}-{d/w}` are *prefixes* for other
+operations:
 ```
+Bytecode representation:
+[ifun-d][0x??]
+[ifun-w][0x??]
+[ffun-d][0x??]
+[ffun-w][0x??]
+
 +--------------------------------------------------------------+
 |                          ifun-{d/w}                          |
 +------++----+----+----+----+----+----+----+----+----+----+----+
@@ -593,15 +609,6 @@ Bytecode table:
 +-------+----++-------+----++-------+----++-------+----+
 |tanh   |0x14||asinh  |0x15||acosh  |0x16||atanh  |0x17|
 +-------+----++-------+----++-------+----++-------+----+
-
-Organization:
-- Control:                    [ 0| 0| 0| 0|x3|x2|x1|x0] (0x00~0x0f)
-- Memory operations:          [ 0| 0| 0| 1|x3|x2|x1|x0] (0x10~0x1f)
-- Integer conversions:        [ 0| 0| 1| 0|x3|x2|x1|x0] (0x20~0x2f)
-- Stack manipulation:         [ 0| 1|o5|o4|o3|o2|o1|o0] (0x40~0x7f)
-- Integral operations:        [ 1| 0|tp|o4|o3|o2|o1|o0] (0x80~0xbf)
-- Floating-point operations:  [ 1| 1| 0|o4|o3|o2|o1|o0] (0xc0~0xdf)
-- Floating-point conversions: [ 1| 1| 1| 0|o3|o2|o1|o0] (0xe0~0xef)
 ```
 
 
