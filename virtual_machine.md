@@ -3,7 +3,8 @@
 - Type: Stack machine
 - Assumes that signed integers are represented as two's complement.
 - Also assumes IEEE 754 floating point types (32 and 64 bits).
-  - A *soft-float* implementation can be used if necessary.
+  - A *soft-float* implementation can be used for ensuring consistent results
+    across different platforms.
 - State:
   - Data/operand stack: 256 64-bit elements.
   - Call/return stack: 256 64-bit elements.
