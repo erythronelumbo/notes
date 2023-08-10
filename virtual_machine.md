@@ -81,8 +81,7 @@ To-do:
 - Arithmetic operations with an immediate operand (?)
   - With a *prefix* byte before the opcode
 - Extra arithmetic and bitwise operations (like modular multiplication, modular
-  inverse, modular exponentiation, popcount, counting trailing/leading zeros,
-  absolute value and sign)
+  inverse, modular exponentiation, GCD and LCM)
   - `ctz` (count trailing zeros) can be used for binary GCD, for example
   - Indicated with a *prefix* opcode (for example: `ifun-w[abs]`)
 - Interaction (I/O) with *external devices*:
@@ -91,7 +90,6 @@ To-do:
   - Also command line arguments?
     - Similar to `argc` and `argv` from C's `main` function.
   - Uses port-mapped I/O
-- Operations on the call stack
 - An `eval` family of opcodes?
   - Treats the top of the data stack as an opcode.
   - Possible usages:
@@ -307,21 +305,18 @@ Memory:
   - `x` will be stored in `memory[addr]`.
 
 "Conversion" between integers:
-- `sxt-b-d`:
-  - `|... x]` --> `|... sign_extend_8to64bits(x)]`
-  - Extends the sign of an 8-bit integer to 64 bits.
 - `sxt-b-w`:
   - `|... x]` --> `|... sign_extend_8to32bits(x)]`
   - Extends the sign of an 8-bit integer to 32 bits.
-- `sxt-b-h`:
-  - `|... x]` --> `|... sign_extend_8to16bits(x)]`
-  - Extends the sign of an 8-bit integer to 16 bits.
-- `sxt-h-d`:
-  - `|... x]` --> `|... sign_extend_16to64bits(x)]`
-  - Extends the sign of a 16-bit integer to 64 bits.
 - `sxt-h-w`:
   - `|... x]` --> `|... sign_extend_16to32bits(x)]`
   - Extends the sign of a 16-bit integer to 32 bits.
+- `sxt-b-d`:
+  - `|... x]` --> `|... sign_extend_8to64bits(x)]`
+  - Extends the sign of an 8-bit integer to 64 bits.
+- `sxt-h-d`:
+  - `|... x]` --> `|... sign_extend_16to64bits(x)]`
+  - Extends the sign of a 16-bit integer to 64 bits.
 - `sxt-w-d`:
   - `|... x]` --> `|... sign_extend_32to64bits(x)]`
   - Extends the sign of a 32-bit integer to 64 bits.
@@ -517,10 +512,12 @@ Organization:
 - Control:                    [ 0| 0| 0| 0|x3|x2|x1|x0] (0x00~0x0f)
 - Memory operations:          [ 0| 0| 0| 1|x3|x2|x1|x0] (0x10~0x1f)
 - Integer conversions:        [ 0| 0| 1| 0|x3|x2|x1|x0] (0x20~0x2f)
+- Reserved/unused:            [ 0| 0| 1| 1|x3|x2|x1|x0] (0x30~0x3f)
 - Stack manipulation:         [ 0| 1|o5|o4|o3|o2|o1|o0] (0x40~0x7f)
 - Integral operations:        [ 1| 0|tp|o4|o3|o2|o1|o0] (0x80~0xbf)
 - Floating-point operations:  [ 1| 1| 0|o4|o3|o2|o1|o0] (0xc0~0xdf)
 - Floating-point conversions: [ 1| 1| 1| 0|o3|o2|o1|o0] (0xe0~0xef)
+- Reserved/unused:            [ 1| 1| 1| 1|x3|x2|x1|x0] (0xf0~0xff)
 
 +----++--------+--------+--------+--------+--------+--------+--------+--------+
 |    ||  0x00  |  0x01  |  0x02  |  0x03  |  0x04  |  0x05  |  0x06  |  0x07  |
@@ -531,7 +528,7 @@ Organization:
 |0x10||ld-d    |ld-w    |ld-h    |ld-b    |st-d    |st-w    |st-h    |st-b    |
 |0x18||ldi-d[p]|ldi-w[p]|ldi-h[p]|ldi-b[p]|sti-d[p]|sti-w[p]|sti-h[p]|sti-b[p]|
 +----++--------+--------+--------+--------+--------+--------+--------+--------+
-|0x20||sxt-b-h |sxt-b-w |sxt-b-d |sxt-h-w |sxt-h-d |sxt-w-d |...     |...     |
+|0x20||sxt-b-w |sxt-h-w |sxt-b-d |sxt-h-d |sxt-w-d |...     |...     |...     |
 |0x28||trc-b   |trc-h   |trc-w   |...     |...     |...     |...     |...     |
 +----++--------+--------+--------+--------+--------+--------+--------+--------+
 |0x30||...     |...     |...     |...     |...     |...     |...     |...     |
