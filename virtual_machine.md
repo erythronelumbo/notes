@@ -30,7 +30,7 @@
       // Pointer to memory
       uint_least64_t* mem;
 
-      // Devices
+      // "Devices"
       void (*devices_fn)(struct vm_state*, uint_least8_t);
     } vm_state;
     ```
@@ -85,8 +85,28 @@ To-do:
   - `ctz` (count trailing zeros) can be used for binary GCD, for example
   - Indicated with a *prefix* opcode (for example: `ifun-w[abs]`)
 - Interaction (I/O) with *external devices*:
-  - Standard input and outputs, screen, mouse, keyboard, a (pseudo)random number
-    generator (?), etc.
+  - Console:
+    - STDOUT and STDERR:
+      - Calls for sending 1, 2, 4 and 8 bytes (characters) and null-terminated
+        strings stored in memory.
+    - STDIN:
+      - (TODO)
+    - Temptative IDs:
+      - `stdout-1`: `|... x] --> |...]` (writes one byte)
+      - `stdout-2`: `|... x] --> |...]` (writes two bytes)
+      - `stdout-4`: `|... x] --> |...]` (writes four bytes)
+      - `stdout-8`: `|... x] --> |...]` (writes eight bytes)
+      - `stdout-str`: `|... addr] --> |...]` (writes a null-terminated string)
+      - `stdout-bytes`: `|... addr n] --> |...]` (writes `n` bytes)
+      - `stderr-1`: `|... x] --> |...]` (writes one byte)
+      - `stderr-2`: `|... x] --> |...]` (writes two bytes)
+      - `stderr-4`: `|... x] --> |...]` (writes four bytes)
+      - `stderr-8`: `|... x] --> |...]` (writes eight bytes)
+      - `stderr-str`: `|... addr] --> |...]` (writes a null-terminated string)
+      - `stderr-bytes`: `|... addr n] --> |...]` (writes `n` bytes)
+    - Allow making terminal user interfaces (like things with pdcurses)?
+      - Maybe it just can be done with the screen device.
+  - Screen, mouse, keyboard, a (pseudo)random number generator (?), etc.
   - Also command line arguments?
     - Similar to `argc` and `argv` from C's `main` function.
   - Uses port-mapped I/O
