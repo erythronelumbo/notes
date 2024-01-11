@@ -5,7 +5,7 @@
   - Useful when working with multiple windows (for example, working with two
     files side-by-side) and when necessary to work with a bigger font size (for
     example, at night, when using a single screen to show the code to other
-    people or when visually impaired).
+    people or if/when visually impaired).
   - Long lines of code tend to be hard to read and understand.
     - It is likely to lose the focus on such lines of code when reading them,
       especially when the code is complex.
@@ -27,13 +27,13 @@
   and other types.
 - Use `UPPERCASE_WITH_UNDERSCORE` for macros.
 - (C++) For template arguments and concepts, use `PascalCase`.
+- Macro names MUST have a maximum length of 64 characters.
+  - For include guard definitions, the respective macro names MUST have a
+    maximum length of 70 characters.
 - Other names MUST have a maximum length of 32 characters.
   - This also applies to source file names, without counting the file extension.
   - This constraint prevents the programmer from using cumbersome, verbose
     names.
-- Macro names MUST have a maximum length of 64 characters.
-  - For include guard definitions, the respective macro names MUST have a
-    maximum length of 70 characters.
 
 ## Indentation
 
@@ -76,6 +76,26 @@
         break;
     }
     ```
+    - `case`s can be stacked in the following manners, as long as the 80-column
+      boundary is respected:
+      - Horizontal:
+        ```c
+        case VALUE0: case VALUE1: case VALUE 2:
+        // do stuff...
+        ```
+      - Vertical:
+        ```c
+        case VALUE0:
+        case VALUE1:
+        case VALUE2:
+        // do something
+        ```
+      - Mixed:
+        ```c
+        case VALUE0: case VALUE1: case VALUE2:
+        case VALUE3: case VALUE4:
+        // the remaining code
+        ```
   - For *while* loops:
     ```c
     while (condition)
@@ -329,7 +349,7 @@ class my_class
 
 In a same line:
 ```cpp
-class derived_1 : base_1, base_2, base_3
+class derived_1 : /*attr*/ base_1, /*attr*/ base_2, /*attr*/ base_3
 {
   // code
 };
@@ -338,23 +358,70 @@ class derived_1 : base_1, base_2, base_3
 In the following lines:
 ```cpp
 class derived_2 :
-  base_1, base_2, base_3
+  /*attr*/ base_1, /*attr*/ base_2, /*attr*/ base_3
 {
   // code
 };
 
 class derived_3 :
-  base_1,
-  base_2,
-  base_3
+  /*attr*/ base_1,
+  /*attr*/ base_2,
+  /*attr*/ base_3
 {
   // code
 };
 
 class derived_4 :
-  base_1, base_2,
-  base_3
+  /*attr*/ base_1, /*attr*/ base_2,
+  /*attr*/ base_3
 {
   // code
 };
 ```
+
+- Notes:
+  - `/*attr*/` refers to any of the usual C++ inheritance attributes.
+  - This also applies to `struct`s.
+
+With templates:
+```cpp
+class my_class_1 : /*attr*/ tmp_class1<p1, p2>, /*attr*/ tmp_class2<p3, p4>
+{
+  // code...
+};
+
+class my_class_2 :
+  /*attr*/ tmp_class1<prm1, prm2, ...>, /*attr*/ tmp_class2<prm1, prm2, ...>
+{
+  // code...
+};
+```
+
+- If the template parameters for at least one of the base `class`es/`struct`s
+  need to be spread in multiple lines, such classes MUST be in separate
+  *sections* and **all** the base classes to be inherited from MUST be placed in
+  the line next to the class declaration:
+  ```cpp
+  class my_class_3 :
+    /*attr*/ base_1, /*attr*/ base_2, /*attr*/ base_3,
+    /*attr*/ base_4,
+    /*attr*/ tmp_class1<
+      param1, param2, param3, param4,
+      param5, param6
+    >,
+    /*attr*/ base_5, /*attr*/ tmp_base_a<tp1, tp2, tp3>,
+    /*attr*/ tmp_base_b<int, float, my_pair<ta, tb>>,
+    /*attr*/ tmp_class_2<
+      my_type_a, my_type_b, my_type_c, some_parameter,
+      some_tmp_thing<ta, tb, tc>, some_tmp_thing<td, te, tf>,
+      some_tmp_thing<
+        ta, tb, tc
+      >,
+      t00, t01, t02, t03
+    >,
+    /*attr*/ tmp_class2<prm1, prm2>, /*attr*/ tmp_class3<prm3, prm4, prm5>,
+    /*attr*/ tc<tc<int, 3>, 4>, /*attr*/ something<0, 1, 1, 2, 3, 5, 13, 21>
+  {
+    // code...
+  };
+  ```
