@@ -41,16 +41,18 @@ DEFINE_INTRINSIC( \
 ```c
 func_status name(
   vm_value *out,
-  vm_value *in_n_minus_1, ..., vm_value *in_2, vm_value *in_1, vm_value *in_0
+  const vm_value *in0, const vm_value *in1, const vm_value *in2,
+  const vm_value *in3
+  /* , maybe some more arguments... */
 )
 {
   {
-    if (!TYPE_TAGS_OK(in_n_minus_1, ..., in_2, in_1, in_0))
+    if (!TYPE_TAGS_OK(in0, in1, in2, in3, ...))
       return func_status_incompatible_types;
   }
   {
     // the function's code...
-    *out = SOME_FUNCTION(*in_n_minus_1, ..., *in_2, *in_1, *in_0);
+    *out = SOME_FUNCTION(in0, in1, in2, in3, ...);
   }
   return func_status_ok;
 }
