@@ -98,32 +98,29 @@ typedef union func_ptr
 } func_ptr;
 ```
 - This should ensure that **only** certain kinds of functions are accepted.
-- Can the signatures be `vm_value (*primfunn_sig)(vm_state*, <<inputs>>...)`?
-  - Should error handling be done with `setjmp` and the like?
+- ~~Can the function signatures be
+  `vm_value (*primfunn_sig)(vm_state*, <<inputs>>...)`?~~
+  - ~~Should error handling be done with `setjmp` and the like?~~
+- The function result can be treated as an error code too.
+  - Use a special tag for error codes.
+  - Only to be used internally by the VM.
 
 Alternative:
 ```c
-typedef vm_value (*primfun0_sig)(
-  vm_state*
-);
+typedef vm_value (*primfun0_sig)();
 typedef vm_value (*primfun1_sig)(
-  vm_state*,
   const vm_value*
 );
 typedef vm_value (*primfun2_sig)(
-  vm_state*,
   const vm_value*, const vm_value*
 );
 typedef vm_value (*primfun3_sig)(
-  vm_state*,
   const vm_value*, const vm_value*, const vm_value*
 );
 typedef vm_value (*primfun4_sig)(
-  vm_state*,
   const vm_value*, const vm_value*, const vm_value*, const vm_value*
 );
 typedef vm_value (*primfun5_sig)(
-  vm_state*,
   const vm_value*, const vm_value*, const vm_value*, const vm_value*,
   const vm_value*
 );
