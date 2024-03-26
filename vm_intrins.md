@@ -98,6 +98,8 @@ typedef union func_ptr
 } func_ptr;
 ```
 - This should ensure that **only** certain kinds of functions are accepted.
+- Can the signatures be `vm_value (*primfunn_sig)(vm_state*, <<inputs>>...)`?
+  - Should error handling be done with `setjmp` and the like?
 
 ## Temptative "translation" for VM's execution loop
 
