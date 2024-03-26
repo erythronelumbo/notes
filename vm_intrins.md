@@ -56,6 +56,47 @@ func_status name(
 }
 ```
 
+Prototype:
+```c
+typedef func_status (*primfun0_sig)(
+  vm_value*
+);
+typedef func_status (*primfun1_sig)(
+  vm_value*,
+  const vm_value*
+);
+typedef func_status (*primfun2_sig)(
+  vm_value*,
+  const vm_value*, const vm_value*
+);
+typedef func_status (*primfun3_sig)(
+  vm_value*,
+  const vm_value*, const vm_value*, const vm_value*
+);
+typedef func_status (*primfun4_sig)(
+  vm_value*,
+  const vm_value*, const vm_value*, const vm_value*, const vm_value*
+);
+typedef func_status (*primfun5_sig)(
+  vm_value*,
+  const vm_value*, const vm_value*, const vm_value*, const vm_value*,
+  const vm_value*
+);
+// ...and so on
+
+typedef union func_ptr
+{
+  primfun0_sig f0;
+  primfun1_sig f1;
+  primfun2_sig f2;
+  primfun3_sig f3;
+  primfun4_sig f4;
+  primfun5_sig f5;
+  // ...and so on
+} func_ptr;
+```
+- This should ensure that **only** certain kinds of functions are accepted.
+
 ## Temptative "translation" for VM's execution loop
 
 Assuming a *big switch*:
