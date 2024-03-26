@@ -36,6 +36,26 @@ DEFINE_INTRINSIC( \
 	- "Forth-style" notation: `(in{n-1} ... in{1} in{0} -- out)`
 	- `out = f(in{n-1} ... in{1} in{0})`
 
+## "Translation" to C function:
+
+```c
+func_status name(
+	vm_value *out,
+	vm_value *in_n_minus_1, ..., vm_value *in_2, vm_value *in_1, vm_value *in_0
+)
+{
+	{
+		if (!TYPE_TAGS_OK(in_n_minus_1, ..., in_2, in_1, in_0))
+			return func_status_incompatible_types;
+	}
+	{
+		// the function's code...
+		*out = SOME_FUNCTION(*in_n_minus_1, ..., *in_2, *in_1, *in_0);
+	}
+	return func_status_ok;
+}
+```
+
 ## Temptative "translation" for VM's execution loop
 
 Assuming a *big switch*:
